@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 /**
  * Step:
@@ -14,7 +15,22 @@
 public class Hangman {
     public static void main(String[] args) {
         String mistery = "mistery";
+        boolean finished = false;
 
+        Scanner scanner = new Scanner(System.in);
 
+        do {
+            System.out.println("\nInsert your try:");
+            String s = scanner.nextLine();
+
+            if (mistery.equals(s)) {
+                System.out.println("OK");
+                finished = true;
+            } else {
+                System.out.println("T'es vraiment trop nul !!!");
+            }
+        } while (!finished);
+
+        scanner.close();
     }
 }
