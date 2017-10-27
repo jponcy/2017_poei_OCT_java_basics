@@ -29,11 +29,28 @@ public class Hangman {
             System.out.println("\nInsert your try:");
             String s = scanner.nextLine();
 
-            if (mistery.equals(s)) {
-                System.out.println("OK");
-                finished = true;
-            } else {
-                System.out.println("T'es vraiment trop nul !!!");
+            if (s.length() > 1) {
+                if (mistery.equals(s)) {
+                    System.out.println("OK");
+                    finished = true;
+                } else {
+                    System.out.println("T'es vraiment trop nul !!!");
+                }
+            } else if (!s.equals("")) {
+                char c = s.charAt(0);
+                boolean finded = false;
+
+                for (char mc : mistery.toCharArray()) {
+                    if (mc == c) {
+                        System.out.println("La lettre est bien dans le mot");
+                        finded = true;
+                        break;
+                    }
+                }
+
+                if (!finded) {
+                    System.out.println("La lettre n'est pas dans le mot");
+                }
             }
         } while (!finished);
 
