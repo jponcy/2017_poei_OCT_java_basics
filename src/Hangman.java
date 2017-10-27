@@ -13,6 +13,11 @@ import java.util.Scanner;
  * 4) Print for each turn the "found state",
  *    for example _iste__ with i, s, t, e as input and mistery to found
  * 5) Allow a number of tries (lifes)
+ *
+ * Homeworks
+ * 6) Case insensitive
+ * 7) Show to user the letters&words already tried (and failed)
+ * 8) No point lost for retry
  */
 public class Hangman {
     public static void main(String[] args) {
