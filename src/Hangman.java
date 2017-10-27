@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -21,17 +22,28 @@ public class Hangman {
         int index = rnd.nextInt(possibilities.length);
 
         String mistery = possibilities[index];
+
+        char[] state = new char[mistery.length()];
+//        for (int i = 0; i < mistery.length(); i ++) {
+//            state[i] = '_';
+//        }
+        // OR.
+        Arrays.fill(state, '-');
+
         boolean finished = false;
 
         Scanner scanner = new Scanner(System.in);
 
         do {
+            for (char c : state) {
+                System.out.print(c);
+            }
+
             System.out.println("\nInsert your try:");
             String s = scanner.nextLine();
 
             if (s.length() > 1) {
                 if (mistery.equals(s)) {
-                    System.out.println("OK");
                     finished = true;
                 } else {
                     System.out.println("T'es vraiment trop nul !!!");
@@ -40,19 +52,30 @@ public class Hangman {
                 char c = s.charAt(0);
                 boolean finded = false;
 
-                for (char mc : mistery.toCharArray()) {
-                    if (mc == c) {
-                        System.out.println("La lettre est bien dans le mot");
+                for (int i = 0; i < mistery.length(); i++) {
+                    if (mistery.charAt(i) == c) {
                         finded = true;
-                        break;
+                        state[i] = c;
                     }
                 }
 
-                if (!finded) {
+                if (finded) {
+                    // Test if last letter to find.
+                    finished = true;
+
+                    for (char pieceOfState : state) {
+                        if (pieceOfState == '-') {
+                            finished = false;
+                            break;
+                        }
+                    }
+                } else {
                     System.out.println("La lettre n'est pas dans le mot");
                 }
             }
         } while (!finished);
+
+        System.out.println("OK, tu as trouvé " + mistery);
 
         scanner.close();
     }
