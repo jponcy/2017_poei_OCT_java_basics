@@ -16,6 +16,7 @@ import java.util.Scanner;
  */
 public class Hangman {
     public static void main(String[] args) {
+        byte lives = 10;
         String[] possibilities = {"mistery", "coucou", "git"};
 
         Random rnd = new Random();
@@ -30,7 +31,7 @@ public class Hangman {
         // OR.
         Arrays.fill(state, '-');
 
-        boolean finished = false;
+        boolean founded = false;
 
         Scanner scanner = new Scanner(System.in);
 
@@ -39,13 +40,16 @@ public class Hangman {
                 System.out.print(c);
             }
 
+            System.out.println("You has " + lives +
+                    " live" + (lives > 1 ? "s" : ""));
             System.out.println("\nInsert your try:");
             String s = scanner.nextLine();
 
             if (s.length() > 1) {
                 if (mistery.equals(s)) {
-                    finished = true;
+                    founded = true;
                 } else {
+                    lives --;
                     System.out.println("T'es vraiment trop nul !!!");
                 }
             } else if (!s.equals("")) {
@@ -61,21 +65,26 @@ public class Hangman {
 
                 if (finded) {
                     // Test if last letter to find.
-                    finished = true;
+                    founded = true;
 
                     for (char pieceOfState : state) {
                         if (pieceOfState == '-') {
-                            finished = false;
+                            founded = false;
                             break;
                         }
                     }
                 } else {
+                    lives --;
                     System.out.println("La lettre n'est pas dans le mot");
                 }
             }
-        } while (!finished);
+        } while (!founded && lives > 0);
 
-        System.out.println("OK, tu as trouvé " + mistery);
+        if (founded) {
+            System.out.println("OK, tu as trouvé " + mistery);
+        } else {
+            System.out.println("T'as perdu toutes tes vies, pars à la douche !");
+        }
 
         scanner.close();
     }
