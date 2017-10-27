@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -14,7 +15,12 @@ import java.util.Scanner;
  */
 public class Hangman {
     public static void main(String[] args) {
-        String mistery = "mistery";
+        String[] possibilities = {"mistery", "coucou", "git"};
+
+        Random rnd = new Random();
+        int index = rnd.nextInt(possibilities.length);
+
+        String mistery = possibilities[index];
         boolean finished = false;
 
         Scanner scanner = new Scanner(System.in);
