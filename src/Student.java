@@ -76,7 +76,7 @@ public class Student {
         */
 
         // Fourth possibility.
-        age = Period.between(now, this.birthdate).getYears();
+        age = Period.between(this.birthdate, now).getYears();
 
         return age;
     }
