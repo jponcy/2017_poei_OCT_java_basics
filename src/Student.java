@@ -5,6 +5,9 @@ public class Student {
     private String firstname;
     private String lastname;
     private LocalDate birthdate;
+    private int comeYear;
+    private String gradient;
+    private School school;
 
     public String getFirstname()
     { return this.firstname; }
@@ -20,6 +23,22 @@ public class Student {
     { return birthdate; }
     public void setBirthdate(LocalDate birthdate)
     { this.birthdate = birthdate; }
+
+    public int getComeYear()
+    { return this.comeYear; }
+    public void setComeYear(int year)
+    { this.comeYear = year; }
+
+    public String getGradient()
+    { return this.gradient; }
+    public void setGradient(String gradient)
+    { this.gradient = gradient; }
+
+    public School getSchool()
+    { return this.school; }
+    public void setSchool(School school) {
+        this.school = school;
+    }
 
     public int getAge() {
         LocalDate now = LocalDate.now();
