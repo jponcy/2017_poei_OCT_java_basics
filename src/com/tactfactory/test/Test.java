@@ -1,3 +1,5 @@
+package com.tactfactory.test;
+
 import java.util.Scanner;
 
 public class Test {

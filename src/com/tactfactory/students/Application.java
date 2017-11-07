@@ -1,6 +1,22 @@
+package com.tactfactory.students;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+/**
+ * 4) Nous gérrons maintenant des professeurs, qui ont :
+ * - nom
+ * - prenom
+ * - date de naissance
+ * - matière enseignée
+ * Modifier l'UML puis le java.
+ *
+ * 5) Les étudiants suivent des cours enseignés par des professeurs.
+ * - 1 cours = 1 professeur, une matière, un nombre de jours
+ * Modifier l'UML puis le java.
+ */
 public class Application {
     public static void main(String[] args) {
         int studentNumber = 40;
@@ -14,7 +30,8 @@ public class Application {
         iia.setName("IIA");
         iia.setAddress("Laval");
 
-        Student[] students = new Student[studentNumber];
+        List<Student> students = new ArrayList<>();
+
         Random random = new Random();
 
         for (int i = 0; i < studentNumber; ++ i) {
@@ -39,9 +56,8 @@ public class Application {
             }
             */
 
-            students[i] = s;
+            students.add(s);
         }
-
 
         for (Student instance:students) {
             System.out.println(
