@@ -14,8 +14,15 @@ import java.util.Random;
  * Modifier l'UML puis le java.
  *
  * 5) Les étudiants suivent des cours enseignés par des professeurs.
- * - 1 cours = 1 professeur, une matière, un nombre de jours
+ * - 1 cours = 1 professeur, une matière, un nombre de jours, date début
  * Modifier l'UML puis le java.
+ *
+ * 6) Une école va maintenant connaître ses étudiants, ses professeurs,
+ * ainsi que les cours donnés.
+ *
+ * 7) Faire un programme (main) qui initialise plusieurs écoles avec
+ * quelques cours.
+ * Puis écrire le "programme scolaire" en console.
  */
 public class Application {
     public static void main(String[] args) {
