@@ -35,6 +35,14 @@ import java.util.List;
  * 8) Nous vendons maintenant des menus snacks avec un produit de nourriture
  * et au moins une boisson.
  * Faire les modifications si nécessaires, et ajouter des commandes de snacks.
+ *
+ * 9) Nous lancerons désormais une exception si un client tente d'acheter
+ * un produit dont on n'a plus de stock.
+ *
+ * 10) Ajouter une methode avec la signature suivante :
+ * public void delivery(HashMap<Product, Integer> products)
+ * qui permet d'ajouter des produit dans nos stocks
+ *
  */
 public class Application {
     public static void main(String[] args) {
