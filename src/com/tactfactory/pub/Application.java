@@ -1,7 +1,5 @@
 package com.tactfactory.pub;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,22 +43,34 @@ import java.util.List;
  *
  */
 public class Application {
+
     public static void main(String[] args) {
-        List<Product> products = createProducts();
-        List<Game> games = createGames();
+        q5();
+    }
+
+    private static void q5() {
+        Pub pub = new Pub();
+
+        Bill jules = new Bill();
+
+        try {
+            jules.addProduct(pub.getProduct("Monaco"), 1);
+            jules.addProduct(pub.getProduct("Saucisson"), 2);
+        } catch (Exception e) {
+            System.out.println("Pas de bol");
+        }
+
+        System.out.println("Jules doit payer " + jules.computeAmount() + " €");
+
+        pub.addBill(jules);
+    }
+
+    private static void q4() {
+        List<Product> products = Pub.createProducts();
+        List<Game> games = Pub.createGames();
 
         printAll(products);
         printAll(games);
-    }
-
-    private static List<Game> createGames() {
-        List<Game> games = new ArrayList<>();
-
-        games.add(new Game("Flipper", 1, 3));
-        games.add(new Game("Billard français", 5, 2));
-        games.add(new Game("Jeux de flêchettes"));
-
-        return games;
     }
 
     private static void printAll(List<?> collection) {
@@ -75,28 +85,5 @@ public class Application {
             System.out.println(instance);
             System.out.println();
         }
-    }
-
-    private static List<Product> createProducts() {
-        List<Product> products = new LinkedList<>();
-
-        products.add(new Food("Saucisson", 6f));
-        products.add(new Food("Chips nature", 3f));
-        products.add(new Food("Chips BBQ", 3.5f));
-
-        products.add(new Drink("Cidre", 4f, true));
-        products.add(new Drink("Cidre breton -- prix touriste", 42f));
-        products.add(new Drink("Cidre breton -- prix breton", 2f, true));
-        products.add(new Drink("Breizh Cola", 3.2f));
-        products.add(new Drink("Coca cola", 25f));
-        products.add(new Drink("Vodka", 8f, true));
-        products.add(new Drink("Monaco", 5f, true));
-        products.add(new Drink("Passoa", 4f, true));
-        products.add(new Drink("Kirch", 4f, true));
-        products.add(new Drink("Sake", 6f, true));
-        products.add(new Drink("Soho", 5.2f, true));
-        products.add(new Drink("Eau", 0f));
-
-        return products;
     }
 }

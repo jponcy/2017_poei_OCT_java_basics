@@ -6,12 +6,12 @@ public class Food extends Product {
     public Food()
     {}
 
-    public Food(String name, float price) {
-        super(name, price);
+    public Food(String name, float price, int stock) {
+        super(name, price, stock);
     }
 
-    public Food(String name, float price, boolean meat) {
-        this(name, price);
+    public Food(String name, float price, int stock, boolean meat) {
+        this(name, price, stock);
 
         this.meat = meat;
     }
