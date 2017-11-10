@@ -22,12 +22,19 @@ import java.util.List;
  * gratuit
  *
  * 5) Nous allons gérer nos stocks de produits ainsi que les factures des
- * clients
+ * clients. Nous initialiserons nos stocks, nos clients ainsi que quelques
+ * commandes
  *
  * 6) En fait, les véganes n'ont pas des soucis qu'avec la viande. Qui aurait pu
  * deviner ? Afin d'éviter d'autres soucis, et gérer en même temps les
  * allergies/régimes/... nous concerverrons la liste précise des ingrédients de
  * nos produits.
+ *
+ * 7) Faire un affichage "sympas" du menu avec prix ingrédients, ...
+ *
+ * 8) Nous vendons maintenant des menus snacks avec un produit de nourriture
+ * et au moins une boisson.
+ * Faire les modifications si nécessaires, et ajouter des commandes de snacks.
  */
 public class Application {
     public static void main(String[] args) {
