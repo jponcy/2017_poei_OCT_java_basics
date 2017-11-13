@@ -2,6 +2,7 @@ package com.tactfactory.example.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,10 +17,7 @@ public class FirstJdbcUse {
     private static final String ERROR_INSERT_BAD_COUNT = "Good for %count% inserts";
     private static final String ERROR_INSERT = ":-(";
     private static final String SUCCESS_INSERT = "All is good";
-    private static final String SQL_INSERT = "INSERT INTO %tableName% (name) VALUES "
-            + "('mouha'), "
-            + "(\"touha\"),"
-            + "(\"tous ceux qui sont seuls\")";
+    private static final String SQL_INSERT = "INSERT INTO %tableName% (name) VALUES (?)";
     private static final String ERROR_CLOSE_DB = "Impossible to close database.";
     private static final String TABLE_NAME = "toto";
     private static final String SUCCESS_CREATE_CONN = "You made it, take control your database now!";
@@ -92,8 +90,10 @@ public class FirstJdbcUse {
      * @param tableName
      */
     private static void selectDataFromTable(Connection conn, String tableName) {
-        try (Statement st = conn.createStatement()) {
-            ResultSet resultSet = st.executeQuery("SELECT * FROM " + tableName);
+        String query = "SELECT * FROM " + tableName;
+
+        try (PreparedStatement st = conn.prepareStatement(query)) {
+            ResultSet resultSet = st.executeQuery();
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -113,10 +113,15 @@ public class FirstJdbcUse {
      * @throws SQLException
      */
     private static Statement insertDataIntoTable(Connection conn, final String tableName) throws SQLException {
-        Statement statement = conn.createStatement();
         String insertQuery = SQL_INSERT.replace("%tableName%", tableName);
+        PreparedStatement statement = conn.prepareStatement(insertQuery);
+        int count = 0;
+        String[] names = {"mouha", "touha", "tous ceux qui sont seuls"};
 
-        int count = statement.executeUpdate(insertQuery);
+        for (String name : names) {
+            statement.setString(1, name);
+            count += statement.executeUpdate();
+        }
 
         switch (count) {
         case 3:
@@ -142,13 +147,13 @@ public class FirstJdbcUse {
      * @return
      * @throws SQLException
      */
-    private static Statement createTable(Connection conn, final String tableName) throws SQLException {
-        Statement statement = conn.createStatement();
+    private static PreparedStatement createTable(Connection conn, final String tableName) throws SQLException {
         String query = SQL_CREATE_TABLE.replace("%tableName%", tableName);
+        PreparedStatement statement = conn.prepareStatement(query);
 
         System.out.println(query);
 
-        statement.execute(query);
+        statement.executeUpdate();
 
         return statement;
     }
