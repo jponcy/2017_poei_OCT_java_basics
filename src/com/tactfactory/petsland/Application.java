@@ -44,10 +44,9 @@ public class Application {
     private static final List<Map<String, String>> fixturesData;
     private static final int FIXTURE_LIMIT = 50;
 
-    private static final DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
     static {
         fixturesData = new ArrayList<>();
+        DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String[] colors = {"silver", "pink", "green", "cyan", "navy", "magenta"};
 
         for (int i = 1; i <= FIXTURE_LIMIT; ++ i) {
@@ -154,9 +153,16 @@ public class Application {
                 statementInsert.setString(2, birthdate);
                 statementInsert.setString(3, color);
 
-                insertCount += statementInsert.executeUpdate();
+                //insertCount += statementInsert.executeUpdate();
+                statementInsert.addBatch();
 
                 System.out.println(String.format("Create rabbit => %s;%s;%s", name, birthdate, color));
+            }
+
+            int[] counts = statementInsert.executeBatch();
+
+            for (int count : counts) {
+                insertCount += count;
             }
 
             if (insertCount == fixturesData.size() && fixturesData.size() == FIXTURE_LIMIT) {
