@@ -16,5 +16,12 @@
  * - suppression DB si existante
  * - création DB
  * - initialisation avec des lapins "de base"
+ *
+ * 5) Utiliser Rabbit à la place du dictionnaire dans la classe Application
+ *
+ * 6) Structurer le code avec plus de classes :
+ * - Rabbit : model (code métier)
+ * - RabbitDao : intéractions avec la DB
+ * - Application : code principal
  */
 package com.tactfactory.petsland;
