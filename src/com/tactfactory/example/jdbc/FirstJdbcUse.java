@@ -32,7 +32,7 @@ public class FirstJdbcUse {
         Connection conn = null;
         final String tableName = TABLE_NAME;
 
-        conn = createConnection(conn);
+        conn = createConnection();
 
         if (conn == null) {
             System.err.println(ERROR_FAIL_CREATE_CONN);
@@ -180,7 +180,9 @@ public class FirstJdbcUse {
      * @param conn
      * @return
      */
-    private static Connection createConnection(Connection conn) {
+    private static Connection createConnection() {
+        Connection conn = null;
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -199,6 +201,7 @@ public class FirstJdbcUse {
             System.err.println("Connection Failed! Check output console");
             e.printStackTrace();
         }
+
         return conn;
     }
 
