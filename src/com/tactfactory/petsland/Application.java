@@ -6,11 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -41,23 +38,17 @@ public class Application {
     private static final String SQL_INSERT_RABBIT = "INSERT INTO " + TABLE_NAME
             + " (name, birthdate, color) VALUES (?, ?, ?)";
 
-    private static final List<Map<String, String>> fixturesData;
+    private static final List<Rabbit> fixturesData;
     private static final int FIXTURE_LIMIT = 50;
 
     static {
         fixturesData = new ArrayList<>();
-        DateTimeFormatter datetimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String[] colors = {"silver", "pink", "green", "cyan", "navy", "magenta"};
+        LocalDate birthdate = LocalDate.now();
 
         for (int i = 1; i <= FIXTURE_LIMIT; ++ i) {
-            Map<String, String> rabbit = new HashMap<>();
-
-            String birthdate = LocalDate.now().format(datetimeFormatter);
             String color = colors[(new Random()).nextInt(colors.length)];
-
-            rabbit.put("name", "Rabbit n°" + i);
-            rabbit.put("birthdate", birthdate);
-            rabbit.put("color", color);
+            Rabbit rabbit = new Rabbit("Rabbit n°" + i, birthdate, color);
 
             fixturesData.add(rabbit);
         }
@@ -144,19 +135,19 @@ public class Application {
             System.out.println("Table created.");
 
 
-            for (Map<String, String> rabbit : fixturesData) {
-                String color = rabbit.get("color");
-                String birthdate = rabbit.get("birthdate");
-                String name = rabbit.get("name");
+            for (Rabbit rabbit : fixturesData) {
+                statementInsert.setString(1, rabbit.getColor());
+                statementInsert.setString(2, rabbit.getBirthdateAsString());
+                statementInsert.setString(3, rabbit.getName());
 
-                statementInsert.setString(1, name);
-                statementInsert.setString(2, birthdate);
-                statementInsert.setString(3, color);
-
-                //insertCount += statementInsert.executeUpdate();
                 statementInsert.addBatch();
 
-                System.out.println(String.format("Create rabbit => %s;%s;%s", name, birthdate, color));
+                System.out.println(
+                        String.format(
+                                "Create rabbit => %s;%s;%s",
+                                rabbit.getName(),
+                                rabbit.getBirthdateAsString(),
+                                rabbit.getColor()));
             }
 
             int[] counts = statementInsert.executeBatch();

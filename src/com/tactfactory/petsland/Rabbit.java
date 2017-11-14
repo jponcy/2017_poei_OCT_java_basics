@@ -1,6 +1,7 @@
 package com.tactfactory.petsland;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Rabbits are clients into our system.
@@ -8,6 +9,8 @@ import java.time.LocalDate;
  * See docs/petsland_mcd
  */
 public class Rabbit {
+    private static final DateTimeFormatter dateFormatter
+            = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private Integer id;
     private String name;
     private LocalDate birthdate;
@@ -61,6 +64,13 @@ public class Rabbit {
      */
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    /**
+     * @return the birthdate
+     */
+    public String getBirthdateAsString() {
+        return this.birthdate.format(Rabbit.dateFormatter);
     }
 
     /**
