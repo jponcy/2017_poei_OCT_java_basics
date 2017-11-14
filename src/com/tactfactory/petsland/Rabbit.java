@@ -30,6 +30,17 @@ public class Rabbit {
     }
 
     /**
+     * The second class constructor.
+     *
+     * @param name
+     * @param birthdate
+     * @param color
+     */
+    public Rabbit(String name, String birthdate, String color) {
+        this(name, LocalDate.parse(birthdate, dateFormatter), color);
+    }
+
+    /**
      * @return the id
      */
     public Integer getId() {

@@ -1,10 +1,5 @@
 package com.tactfactory.petsland;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,30 +9,6 @@ import java.util.Random;
  * See package-info about instructions.
  */
 public class Application {
-    private static final String INSERT_FAIL     = "Inserts fail";
-    private static final String INSERT_SUCCESS  = "Inserts success";
-
-    private static final String DRIVER      = "jdbc";
-    private static final String SGBDR       = "mysql";
-    private static final String HOSTNAME    = "localhost";
-    private static final short  PORT        = 3306;
-    private static final String DB_NAME     = "lapi_bar";
-    private static final String TABLE_NAME  = "rabbit";
-    private static final String USER        = "root";
-    private static final String PASSWD      = "jepreferepostgres";
-
-    private static final String SQL_DROP_DB = "DROP DATABASE IF EXISTS " + DB_NAME;
-    private static final String SQL_CREATE_DB = "CREATE DATABASE " + DB_NAME;
-    private static final String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + "("
-            + "        id        BigInt NOT NULL AUTO_INCREMENT,"
-            + "        name      Varchar (50) NOT NULL ,"
-            + "        birthdate Date ,"
-            + "        color     Varchar (20) NOT NULL ,"
-            + "        PRIMARY KEY (id )"
-            + ")ENGINE=InnoDB;";
-    private static final String SQL_INSERT_RABBIT = "INSERT INTO " + TABLE_NAME
-            + " (name, birthdate, color) VALUES (?, ?, ?)";
-
     private static final List<Rabbit> fixturesData;
     private static final int FIXTURE_LIMIT = 50;
 
@@ -66,103 +37,29 @@ public class Application {
     }
 
     private static void showData() {
-        try (
-            Connection connection = createConnection(DB_NAME);
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + TABLE_NAME)
-        ) {
-            statement.execute();
-            ResultSet rabbit = statement.getResultSet();
+        RabbitDao dao = new RabbitDao();
+        List<Rabbit> rabbits = dao.findAll();
 
-            while (rabbit.next()) {
-                System.out.println(String.format(" - %s\n\tbirthdate: %s\n\tcolor: %s",
-                        rabbit.getString("name"),
-                        rabbit.getString("birthdate"),
-                        rabbit.getString("color")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        for (Rabbit rabbit : rabbits) {
+            System.out.println(String.format(" - %s\n\tbirthdate: %s\n\tcolor: %s",
+                    rabbit.getName(),
+                    rabbit.getBirthdateAsString(),
+                    rabbit.getColor()));
         }
-    }
-
-    /**
-     * Creates the connection to database.
-     *
-     * @return
-     */
-    private static Connection createConnection(String dbName) {
-        Connection connection = null;
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.err.println("Where is your MySQL JDBC Driver?");
-            e.printStackTrace();
-            System.exit(0);
-        }
-
-        try {
-            String connectionString = (dbName == null
-                    ? String.format("%s:%s://%s:%d", DRIVER, SGBDR, HOSTNAME, PORT)
-                    : String.format("%s:%s://%s:%d/%s", DRIVER, SGBDR, HOSTNAME, PORT, dbName));
-            connection = DriverManager.getConnection(connectionString, USER, PASSWD);
-        } catch (SQLException e) {
-            System.err.println("Connection Failed! Check output console");
-            e.printStackTrace();
-            System.exit(0);
-        }
-
-        return connection;
     }
 
     /**
      * Creates the table.
      */
     private static void createDb() {
-        try (Connection connection = createConnection(null)) {
-            connection.prepareStatement(SQL_DROP_DB).execute();
-            connection.prepareStatement(SQL_CREATE_DB).execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        RabbitDao rabbitDao = new RabbitDao();
 
-        try (
-            Connection connection = createConnection(DB_NAME);
-            PreparedStatement statementSchema = connection.prepareStatement(SQL_CREATE_TABLE);
-            PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT_RABBIT)
-        ) {
-            int insertCount = 0;
-            statementSchema.executeUpdate();
-            System.out.println("Table created.");
-
-
-            for (Rabbit rabbit : fixturesData) {
-                statementInsert.setString(1, rabbit.getColor());
-                statementInsert.setString(2, rabbit.getBirthdateAsString());
-                statementInsert.setString(3, rabbit.getName());
-
-                statementInsert.addBatch();
-
-                System.out.println(
-                        String.format(
-                                "Create rabbit => %s;%s;%s",
-                                rabbit.getName(),
-                                rabbit.getBirthdateAsString(),
-                                rabbit.getColor()));
-            }
-
-            int[] counts = statementInsert.executeBatch();
-
-            for (int count : counts) {
-                insertCount += count;
-            }
-
-            if (insertCount == fixturesData.size() && fixturesData.size() == FIXTURE_LIMIT) {
-                System.out.println(INSERT_SUCCESS);
-            } else {
-                System.err.println(INSERT_FAIL);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if ((new DatabaseManager()).rebuildDatabaseSchema()) {
+            System.out.println("Database rebuild.");
+            rabbitDao.insert(fixturesData);
+        } else {
+            System.err.println("Impossible to rebuild Database.");
+            System.exit(42);
         }
     }
 }
