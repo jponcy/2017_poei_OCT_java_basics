@@ -26,9 +26,10 @@ public class DatabaseManager {
     private static final String SQL_CREATE_DB = "CREATE DATABASE " + DB_NAME;
 
     private static volatile DatabaseManager instance;
-    private Connection connection;
+    private final Connection connection;
 
     private DatabaseManager() {
+        this.connection = this.createConnection();
     }
 
     @Override
@@ -49,7 +50,7 @@ public class DatabaseManager {
     }
 
     public static Connection getConnection() {
-        return DatabaseManager.getInstance().createConnection();
+        return DatabaseManager.getInstance().connection;
     }
 
     /**
@@ -67,34 +68,35 @@ public class DatabaseManager {
      *
      * @return
      */
-    public Connection createConnection(String dbName) {
-        if (this.connection == null) {
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                System.err.println("Where is your MySQL JDBC Driver?");
-                e.printStackTrace();
-                System.exit(0);
-            }
+    private Connection createConnection(String dbName) {
+        Connection connection = null;
 
-            try {
-                String connectionString = (dbName == null
-                        ? String.format("%s:%s://%s:%d", DRIVER, SGBDR, HOSTNAME, PORT)
-                        : String.format("%s:%s://%s:%d/%s", DRIVER, SGBDR, HOSTNAME, PORT, dbName));
-                this.connection = DriverManager.getConnection(connectionString, USER, PASSWD);
-            } catch (SQLException e) {
-                System.err.println("Connection Failed! Check output console");
-                e.printStackTrace();
-                System.exit(0);
-            }
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Where is your MySQL JDBC Driver?");
+            e.printStackTrace();
+            System.exit(0);
         }
 
-        return this.connection;
+        try {
+            String connectionString = (dbName == null
+                    ? String.format("%s:%s://%s:%d", DRIVER, SGBDR, HOSTNAME, PORT)
+                    : String.format("%s:%s://%s:%d/%s", DRIVER, SGBDR, HOSTNAME, PORT, dbName));
+            connection = DriverManager.getConnection(connectionString, USER, PASSWD);
+        } catch (SQLException e) {
+            System.err.println("Connection Failed! Check output console");
+            e.printStackTrace();
+            System.exit(0);
+        }
+
+        return connection;
     }
 
     public boolean rebuildDatabaseSchema() {
         boolean success = true;
 
+        // Use local connection and not final to reset db.
         try (Connection connection = createConnection(null)) {
             connection.prepareStatement(SQL_DROP_DB).execute();
             connection.prepareStatement(SQL_CREATE_DB).execute();
@@ -104,8 +106,7 @@ public class DatabaseManager {
         }
 
         try (
-            Connection connection = createConnection(DB_NAME);
-            PreparedStatement statementSchema = connection.prepareStatement(SQL_CREATE_TABLE);
+            PreparedStatement statementSchema = this.connection.prepareStatement(SQL_CREATE_TABLE);
         ) {
             statementSchema.executeUpdate();
         } catch (SQLException e) {
