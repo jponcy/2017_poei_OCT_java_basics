@@ -12,6 +12,22 @@ public class RabbitDao extends AbstractDao {
     private static final String SQL_INSERT_RABBIT = "INSERT INTO " + getTableName()
             + " (name, birthdate, color) VALUES (?, ?, ?)";
 
+    private static volatile RabbitDao instance = null;
+
+    public final static RabbitDao getInstance() {
+        if (RabbitDao.instance == null) {
+            RabbitDao.instance = new RabbitDao();
+        }
+
+        return RabbitDao.instance;
+    }
+
+    /**
+     * Private constructor -- DP singleton.
+     */
+    private RabbitDao() {
+    }
+
     /**
      * Finds then returns all rabbits from DB.
      *
@@ -19,11 +35,9 @@ public class RabbitDao extends AbstractDao {
      */
     public List<Rabbit> findAll() {
         List<Rabbit> result = new LinkedList<>();
+        Connection connection = DatabaseManager.getConnection();
 
-        try (
-            Connection connection = this.createConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL)
-        ) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL)) {
             statement.execute();
             ResultSet rabbit = statement.getResultSet();
 
@@ -47,10 +61,9 @@ public class RabbitDao extends AbstractDao {
     }
 
     public void insert(Rabbit rabbit) {
-        try (
-            Connection connection = createConnection();
-            PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT_RABBIT)
-        ) {
+        Connection connection = createConnection();
+
+        try (PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT_RABBIT)) {
             this.tune(statementInsert, rabbit);
 
             statementInsert.execute();
@@ -60,10 +73,9 @@ public class RabbitDao extends AbstractDao {
     }
 
     public void insert(List<Rabbit> entities) {
-        try (
-            Connection connection = createConnection();
-            PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT_RABBIT)
-        ) {
+        Connection connection = createConnection();
+
+        try (PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT_RABBIT)) {
             for (Rabbit rabbit : entities) {
                 this.tune(statementInsert, rabbit);
                 statementInsert.addBatch();

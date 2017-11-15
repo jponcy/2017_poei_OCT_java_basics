@@ -4,6 +4,6 @@ import java.sql.Connection;
 
 public abstract class AbstractDao {
     protected Connection createConnection() {
-        return DatabaseManager.createConnection();
+        return DatabaseManager.getInstance().createConnection();
     }
 }

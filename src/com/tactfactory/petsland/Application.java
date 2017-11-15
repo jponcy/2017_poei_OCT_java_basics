@@ -32,12 +32,11 @@ public class Application {
      */
     public static void main(String[] args) {
         createDb();
-
         showData();
     }
 
     private static void showData() {
-        RabbitDao dao = new RabbitDao();
+        RabbitDao dao = RabbitDao.getInstance();
         List<Rabbit> rabbits = dao.findAll();
 
         for (Rabbit rabbit : rabbits) {
@@ -52,9 +51,9 @@ public class Application {
      * Creates the table.
      */
     private static void createDb() {
-        RabbitDao rabbitDao = new RabbitDao();
+        final RabbitDao rabbitDao = RabbitDao.getInstance();
 
-        if ((new DatabaseManager()).rebuildDatabaseSchema()) {
+        if (DatabaseManager.getInstance().rebuildDatabaseSchema()) {
             System.out.println("Database rebuild.");
             rabbitDao.insert(fixturesData);
         } else {
