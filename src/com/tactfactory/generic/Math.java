@@ -39,9 +39,14 @@ public class Math {
 
 
     public static void main(String[] args) throws Exception {
-        System.out.println(Math.melanieMax(4242d, 42));
+//        System.out.println(Math.melanieMax(4242d, 42));
+//
+//        System.out.println(Math.min(3));
+//        System.out.println(Math.min(3, 4, 3, 5, 3, 1, -104321));
 
-        System.out.println(Math.min(3));
-        System.out.println(Math.min(3, 4, 3, 5, 3, 1, -104321));
+        MathValue<Integer> mv = new MathValue<>(42);
+        MathValue<Integer> min = mv.min(new MathValue<Integer>(3));
+
+        System.out.println(min);
     }
 }
