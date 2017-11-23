@@ -14,6 +14,11 @@ public class MathValue <K extends Number> extends Number {
         return this.value.toString();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MathValue && Math.equals(this, obj);
+    }
+
     public MathValue<K> min(MathValue<K> a) {
         return Math.min(this, a);
     }
