@@ -1,32 +1,34 @@
 package com.tactfactory.supports;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Application {
     public static void main(String[] args) {
-        Animal a = new Animal();
-        Mammal m = new Mammal();
-        Animal am = new Mammal();
+        List<Animal> animals = initZoo();
 
-//        String s = "coucou";
-//
-//        a.say(s);
-//        m.say(s);
-//
-//        System.out.println("----------");
-//
-//        a.say(s, s);
-//        m.say(s, s);
+        // Feed all animals.
+        for (Animal a : animals) {
+            a.feed();
+        }
 
-        say(a);
-        say(m);
-        say(am);
+        // Print text separator.
+        System.out.println("------------");
+
+        // Heal all animals.
+        animals.forEach(a -> a.heal());
     }
 
-    public static void say(Animal a) {
-        a.say("méthode say");
+    /** Creates the animals object representation of our zoo. */
+    private static List<Animal> initZoo() {
+        List<Animal> result = new LinkedList<>();
 
-        if (a instanceof Mammal) {
-            Mammal am = (Mammal) a;
-            am.specificMammal();
-        }
+        result.add(new GuineaPig());
+        result.add(new Tiger());
+        result.add(new Turtle());
+        result.add(new Gali());
+        result.add(new Whale());
+
+        return result;
     }
 }

@@ -1,12 +1,8 @@
 package com.tactfactory.supports;
 
-public class Mammal extends Animal {
+/* package */abstract class Mammal extends AbstractAnimal {
     @Override
-    public void say(String sentence) {
-        super.say("Mammal says " + sentence);
-    }
-
-    public void specificMammal() {
-        System.out.println("Je suis un mammal, je suis trop fier !");
+    public void feed() {
+        System.out.println("Un bon paquet de croquettes !");
     }
 }
